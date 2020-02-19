@@ -18,24 +18,27 @@ package org.esupportail.publisher.web.rest.util;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.joda.time.format.ISODateTimeFormat;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by jgribonvald on 09/06/16.
  */
 @Slf4j
-public class ISO8601DateTimeXmlAdapter extends XmlAdapter<String, DateTime> {
+public class ISO8601LocalDateTimeXmlAdapter extends XmlAdapter<String, Instant> {
 
     //private static DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
 
     @Override
-    public DateTime unmarshal(String v) throws Exception {
-        return ISODateTimeFormat.dateTimeParser().parseDateTime(v);
+    public Instant unmarshal(String v) throws Exception {
+        return LocalDateTime.parse(v, DateTimeFormatter.ISO_OFFSET_DATE_TIME).atZone(ZoneId.systemDefault()).toInstant();
     }
 
     @Override
-    public String marshal(DateTime v) throws Exception {
-        return ISODateTimeFormat.dateTime().print(v);
+    public String marshal(Instant v) throws Exception {
+        return DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneId.systemDefault()).format(v);
     }
 }
